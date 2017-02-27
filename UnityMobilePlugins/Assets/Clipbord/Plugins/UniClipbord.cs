@@ -8,7 +8,11 @@ namespace NativeSystem
 #if !UNITY_EDITOR && UNITY_IOS
         [DllImport("__Internal")]
         private static extern void _Copy(string text);
+
+        [DllImport("__Internal")]
+        private static extern string _Paste();
 #endif
+
         public static void Copy(string text)
         {
 #if !UNITY_EDITOR && UNITY_IOS
@@ -33,6 +37,7 @@ namespace NativeSystem
         public static string Paste()
         {
 #if !UNITY_EDITOR && UNITY_IOS
+            return _Paste();
 #elif !UNITY_EDITOR && UNITY_ANDROID
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");

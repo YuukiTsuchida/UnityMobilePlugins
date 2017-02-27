@@ -28,5 +28,20 @@ namespace NativeSystem
             GUIUtility.systemCopyBuffer = text;
 #endif
         }
+
+        // クリップボードから文字列を取り出す
+        public static string Paste()
+        {
+#if !UNITY_EDITOR && UNITY_IOS
+#elif !UNITY_EDITOR && UNITY_ANDROID
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaObject clipboardManager = activity.Call<AndroidJavaObject>("getSystemService","clipboard");
+            AndroidJavaObject item = clipboardManager.Call<AndroidJavaObject>("getPrimaryClip").Call<AndroidJavaObject>("getItemAt", 0);
+            return item.Call<AndroidJavaObject>("getText").Call<string>("toString");
+#else
+            return GUIUtility.systemCopyBuffer;
+#endif
+        }
     }
 }
